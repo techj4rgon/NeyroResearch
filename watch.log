@@ -1,0 +1,122 @@
+============================================================
+NEYRO/AURUM WATCH 2026-06-11T22:47:47+00:00
+window 06-11 14:02 -> 06-11 22:47 UTC  (~8.8h)
+============================================================
+
+[SWEEP] 499,761 USDT exited pool via platform collects, 503 recipients
+   0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098  -> None  *** NEW UNKNOWN SINK - REVIEW ***
+
+[RETURN] Binance -> cluster: direct 0 + indirect 0 USDT
+
+------------------------------------------------------------
+VERDICT: sweep activity to CEX/new sink (expected one-way); no return. -> new sink 0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098
+------------------------------------------------------------
+============================================================
+NEYRO/AURUM WATCH 2026-06-12T02:49:04+00:00
+window 06-11 18:03 -> 06-12 02:49 UTC  (~8.8h)
+============================================================
+
+[SWEEP] 542,413 USDT exited pool via platform collects, 1384 recipients
+   0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098  -> None  *** NEW UNKNOWN SINK - REVIEW ***
+
+[RETURN] Binance -> cluster: direct 0 + indirect 0 USDT
+
+------------------------------------------------------------
+VERDICT: sweep activity to CEX/new sink (expected one-way); no return. -> new sink 0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098
+------------------------------------------------------------
+==============================================================
+NEYRO/AURUM WATCH 2026-06-12T04:47:02+00:00
+window 06-11 20:01 -> 06-12 04:47 UTC  (~8.8h)
+==============================================================
+
+[MINT] 174,920 USDT entered the position via 94 mints at platform ticks
+       internal (funnel/bot): 174,920   |   EXTERNAL: 0
+
+[DEPOSIT] user deposits into funnel: 561,948 USDT
+          deposit/mint coverage: 321%  (mints ~covered by deposits)
+
+[SWEEP] 590,272 USDT left pool via platform collects, 2063 recipients
+   0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098  -> 0x82a42324ac9133f5fc5a36e9cc4856d0ee99aae8  *** NEW UNKNOWN SINK - REVIEW ***
+
+[RESERVE] platform position holds 1,147,309 USDT now (pool tick -12).
+          ^ watch this number across runs: falling = tank draining, flat while payouts>deposits = external top-up.
+[POSITION] window flow: mints 174,920 in - collects 590,272 out = -415,351  (drew down)
+
+[RETURN] Binance -> cluster (BSC/USDT only): direct 0 + indirect 0 USDT
+
+--------------------------------------------------------------
+VERDICT: position fed only by operator bot from deposits (no external capital),
+         drawing down this window (net -415,351), no Binance return. Consistent with Ponzi.
+         note: new sink 0x46c2abb69c9a91a86352e11b7ed4bce56a9998aa 10,098
+--------------------------------------------------------------
+==============================================================
+NEYRO/AURUM WATCH 2026-06-12T07:48:22+00:00
+window 06-11 23:02 -> 06-12 07:48 UTC  (~8.8h)
+==============================================================
+
+[MINT] 0 USDT entered the position via 0 mints at platform ticks
+       internal (funnel/bot): 0   |   EXTERNAL: 0
+
+[DEPOSIT] user deposits into funnel: 529,008 USDT
+
+[SWEEP] 370,390 USDT left pool via platform collects, 3080 recipients
+
+[RESERVE] platform position holds 1,147,309 USDT now (pool tick -11).
+          ^ watch this number across runs: falling = tank draining, flat while payouts>deposits = external top-up.
+[POSITION] window flow: mints 0 in - collects 370,390 out = -370,390  (drew down)
+
+[RETURN] Binance -> cluster (BSC/USDT only): direct 0 + indirect 0 USDT
+
+--------------------------------------------------------------
+VERDICT: position fed only by operator bot from deposits (no external capital),
+         drawing down this window (net -370,390), no Binance return. Consistent with Ponzi.
+--------------------------------------------------------------
+==============================================================
+NEYRO/AURUM WATCH 2026-06-12T10:47:02+00:00
+window 06-12 02:01 -> 06-12 10:47 UTC  (~8.8h)
+==============================================================
+
+[MINT] 692,279 USDT entered the position via 117 mints at platform ticks
+       internal (funnel/bot): 692,279   |   EXTERNAL: 0
+
+[DEPOSIT] user deposits into funnel: 519,094 USDT
+          deposit/mint coverage: 75%  (mints exceed deposits -> capital from elsewhere)
+
+[SWEEP] 246,589 USDT left pool via platform collects, 2735 recipients
+
+[RESERVE] platform position holds 1,839,587 USDT now (pool tick -10).
+          ^ watch this number across runs: falling = tank draining, flat while payouts>deposits = external top-up.
+[POSITION] window flow: mints 692,279 in - collects 246,589 out = 445,689  (grew)
+
+[RETURN] Binance -> cluster (BSC/USDT only): direct 0 + indirect 0 USDT
+
+--------------------------------------------------------------
+VERDICT: position fed only by operator bot from deposits (no external capital),
+         holding/growing this window (net 445,689), no Binance return. Consistent with Ponzi.
+--------------------------------------------------------------
+==============================================================
+NEYRO/AURUM WATCH 2026-06-12T13:47:02+00:00
+window 06-12 05:01 -> 06-12 13:47 UTC  (~8.8h)
+==============================================================
+
+[MINT] 1,038,319 USDT entered the position via 254 mints at platform ticks
+       internal (funnel/bot): 1,038,319   |   EXTERNAL: 0
+
+[DEPOSIT] user deposits into funnel: 643,293 USDT
+          deposit/mint coverage: 62%  (mints exceed deposits -> capital from elsewhere)
+
+[SWEEP] 1,018,265 USDT left pool via platform collects, 1947 recipients
+   0xf5381968da8ffcdfa34b18b3b1b030d3c0a05c70 11,083  -> recirculates
+   0x964a450c358855a4ffbf1d18d32b597eafbe6186 10,233  -> None  *** NEW UNKNOWN SINK - REVIEW ***
+
+[RESERVE] platform position holds 2,185,627 USDT now (pool tick -10).
+          ^ watch this number across runs: falling = tank draining, flat while payouts>deposits = external top-up.
+[POSITION] window flow: mints 1,038,319 in - collects 1,018,265 out = 20,053  (grew)
+
+[RETURN] Binance -> cluster (BSC/USDT only): direct 0 + indirect 0 USDT
+
+--------------------------------------------------------------
+VERDICT: position fed only by operator bot from deposits (no external capital),
+         holding/growing this window (net 20,053), no Binance return. Consistent with Ponzi.
+         note: new sink 0x964a450c358855a4ffbf1d18d32b597eafbe6186 10,233
+--------------------------------------------------------------

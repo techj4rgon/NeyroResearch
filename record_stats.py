@@ -83,16 +83,23 @@ def main():
 
     migrate_csv()
 
-    # Accumulate running totals from all prior rows in the CSV.
+    # Accumulate running totals using one row per calendar date (the last run that day)
+    # to avoid double-counting from overlapping 9h scan windows.
     cum_collects = 0
     cum_return   = 0
+    today = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
     if os.path.exists(CSV):
+        by_date = {}
         with open(CSV, newline="") as f:
             for r in csv.DictReader(f):
-                try: cum_collects += int(r.get("collects") or 0)
-                except ValueError: pass
-                try: cum_return += int(r.get("return_direct") or 0) + int(r.get("return_indirect") or 0)
-                except ValueError: pass
+                date = (r.get("timestamp_utc") or "")[:10]
+                if date and date != today:
+                    by_date[date] = r   # last row wins for each prior date
+        for r in by_date.values():
+            try: cum_collects += int(r.get("collects") or 0)
+            except ValueError: pass
+            try: cum_return += int(r.get("return_direct") or 0) + int(r.get("return_indirect") or 0)
+            except ValueError: pass
     row["cum_collects"] = str(cum_collects + int(row["collects"] or 0))
     row["cum_return"]   = str(cum_return + int(row["return_direct"] or 0) + int(row["return_indirect"] or 0))
 

@@ -7,7 +7,11 @@ import subprocess, re, csv, os, datetime
 
 CSV = os.path.join(os.path.dirname(__file__), "daily_stats.csv")
 FIELDS = ["timestamp_utc", "reserve", "deposits", "collects", "position_net",
-          "external", "return_direct", "return_indirect", "verdict"]
+          "external", "return_direct", "return_indirect",
+          "deposit_mint_coverage", "collects_vs_baseline",
+          "cum_collects", "cum_return", "verdict"]
+
+COLLECTS_BASELINE = 540_000   # historical ~$540k per ~9h window
 
 def parse(output):
     def g(pattern, default="0"):
@@ -21,24 +25,49 @@ def parse(output):
     external     = g(r"EXTERNAL: ([\d,]+)")
     ret_direct   = g(r"direct ([\d,]+) \+")
     ret_indirect = g(r"\+ indirect ([\d,]+)")
+    coverage     = g(r"deposit/mint coverage: ([\d]+)%")
+
+    collects_int       = int(collects) if collects and collects != "0" else 0
+    collects_vs_base   = str(collects_int - COLLECTS_BASELINE)
 
     verdict = "unknown"
-    if "EXTERNAL CAPITAL" in output:  verdict = "ANOMALY_EXTERNAL"
-    elif "RETURN FLOW"    in output:  verdict = "ANOMALY_RETURN"
-    elif "COLLAPSE"       in output:  verdict = "DRAINING"
+    if "EXTERNAL CAPITAL" in output:     verdict = "ANOMALY_EXTERNAL"
+    elif "RETURN FLOW"    in output:     verdict = "ANOMALY_RETURN"
+    elif "COLLAPSE"       in output:     verdict = "DRAINING"
     elif "Consistent with Ponzi" in output: verdict = "STABLE_PONZI"
 
     return {
-        "timestamp_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M"),
-        "reserve":       reserve,
-        "deposits":      deposits,
-        "collects":      collects,
-        "position_net":  pos_net.replace(",", ""),
-        "external":      external,
-        "return_direct": ret_direct,
-        "return_indirect": ret_indirect,
-        "verdict":       verdict,
+        "timestamp_utc":         datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M"),
+        "reserve":               reserve,
+        "deposits":              deposits,
+        "collects":              collects,
+        "position_net":          pos_net.replace(",", ""),
+        "external":              external,
+        "return_direct":         ret_direct,
+        "return_indirect":       ret_indirect,
+        "deposit_mint_coverage": coverage,
+        "collects_vs_baseline":  collects_vs_base,
+        "cum_collects":          "0",   # filled in main() after reading history
+        "cum_return":            "0",   # filled in main() after reading history
+        "verdict":               verdict,
     }
+
+def migrate_csv():
+    """Rewrite CSV with updated column schema if it doesn't match FIELDS."""
+    if not os.path.exists(CSV):
+        return
+    with open(CSV, newline="") as f:
+        reader = csv.DictReader(f)
+        if (reader.fieldnames or []) == FIELDS:
+            return
+        rows = list(reader)
+    with open(CSV, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
+        w.writeheader()
+        for row in rows:
+            for field in FIELDS:
+                row.setdefault(field, "")
+            w.writerow(row)
 
 def main():
     result = subprocess.run(
@@ -51,6 +80,21 @@ def main():
         raise SystemExit(result.returncode)
 
     row = parse(result.stdout)
+
+    migrate_csv()
+
+    # Accumulate running totals from all prior rows in the CSV.
+    cum_collects = 0
+    cum_return   = 0
+    if os.path.exists(CSV):
+        with open(CSV, newline="") as f:
+            for r in csv.DictReader(f):
+                try: cum_collects += int(r.get("collects") or 0)
+                except ValueError: pass
+                try: cum_return += int(r.get("return_direct") or 0) + int(r.get("return_indirect") or 0)
+                except ValueError: pass
+    row["cum_collects"] = str(cum_collects + int(row["collects"] or 0))
+    row["cum_return"]   = str(cum_return + int(row["return_direct"] or 0) + int(row["return_indirect"] or 0))
 
     write_header = not os.path.exists(CSV)
     with open(CSV, "a", newline="") as f:
